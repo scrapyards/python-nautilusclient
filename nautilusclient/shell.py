@@ -29,9 +29,6 @@ VALID_OUTPUT_FORMATS = ['json', 'yaml']
 
 class Context(object):
 
-    def __init__(self):
-        self.home = os.getcwd()
-
     def log(sel, msg, *args):
         self.log(msg, *args)
 
@@ -68,10 +65,6 @@ class NautilusCLI(click.MultiCommand):
 @pass_context
 def cli(*args, **kwargs):
     """Command-Line Interface main class"""
-    try:
-        args[0].verbose = kwargs.get('verbose', False)
-    except IndexError:
-        pass
 
 
 if __name__ == '__main__':

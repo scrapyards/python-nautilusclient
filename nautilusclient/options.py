@@ -12,19 +12,17 @@
 # limitations under the License.
 
 import click
-import json
-
-from nautilusclient.api import engine
-from nautilusclient.shell import pass_context
-from nautilusclient import options
-
-COMMAND_NAME = 'stocks'
+import functools
 
 
-@click.command(COMMAND_NAME, help="Gets stock information")
-@click.argument('symbol')
-@options.os_params
-@pass_context
-def cli(ctx, symbol, **kwargs):
-    resp = engine.GoogleFinAPI().get_stocks(symbol)
-    click.echo(json.dumps(resp))
+def os_params(func):
+    @click.option('--os-identity-api-version',
+                  help='Identity API Version',
+                  envvar='OS_IDENTITY_API_VERSION')
+    @click.option('--os-auth-url',
+                  help='Authentication URL with password',
+                  envvar='OS_AUTH_URL')
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
